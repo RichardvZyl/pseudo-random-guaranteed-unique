@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-scripts:
+    name: Verify SQL scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify expected SQL directories and files
+        run: |
+          set -euo pipefail
+
+          engines=(postgres sqlserver)
+          scripts=(
+            pin_01_security_setup.sql
+            pin_02_schema.sql
+            pin_03_seed.sql
+            pin_04_dispense.sql
+            pin_05_decrypt.sql
+            pin_06_maintenance.sql
+          )
+
+          missing=0
+          for engine in "${engines[@]}"; do
+            if [[ ! -d "$engine" ]]; then
+              echo "::error::Missing required directory: ${engine}/"
+              missing=1
+              continue
+            fi
+            echo "OK directory: ${engine}/"
+
+            for script in "${scripts[@]}"; do
+              path="${engine}/${script}"
+              if [[ ! -f "$path" ]]; then
+                echo "::error::Missing required file: ${path}"
+                missing=1
+                continue
+              fi
+              if [[ ! -s "$path" ]]; then
+                echo "::error::Required file is empty: ${path}"
+                missing=1
+                continue
+              fi
+              echo "OK ${path} ($(wc -c < "$path") bytes)"
+            done
+          done
+
+          if [[ "$missing" -ne 0 ]]; then
+            echo "Structural check failed."
+            exit 1
+          fi
+
+          echo "All expected SQL directories and files exist and are non-empty."
