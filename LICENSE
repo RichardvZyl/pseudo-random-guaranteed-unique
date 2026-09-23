@@ -19,14 +19,15 @@ possessing a copy of it.
 2. NO LICENSE GRANTED WITHOUT PERMISSION
 ================================================================================
 
-NO rights, licenses, or permissions are granted to any person or entity under
-this license by default. In particular, without the prior, express, written
+Except for the evaluation and study rights granted in Section 2A below, NO
+rights, licenses, or permissions are granted to any person or entity under this
+license by default. In particular, without the prior, express, written
 permission of the Owner, you MAY NOT:
 
-  (a) use the Software, in whole or in part, for any purpose, including any
-      personal, academic, evaluation, internal, or commercial purpose;
-  (b) copy, reproduce, or store the Software, except for a single copy created
-      incidentally while viewing this repository through its hosting provider;
+  (a) use the Software, in whole or in part, for any purpose beyond the
+      evaluation and study permitted by Section 2A, including any internal or
+      commercial purpose;
+  (b) copy, reproduce, or store the Software, except as permitted by Section 2A;
   (c) modify, adapt, translate, or create derivative works based on the
       Software;
   (d) distribute, publish, sublicense, sell, rent, lease, lend, or otherwise
@@ -38,6 +39,29 @@ permission of the Owner, you MAY NOT:
 
 Viewing this repository does not grant any implied license by estoppel or
 otherwise.
+
+================================================================================
+2A. PERMITTED: EVALUATION AND STUDY
+================================================================================
+
+Notwithstanding Section 2, any person may, at no charge and without prior
+permission:
+
+  (a) clone, download, and retain a copy of the Software for the purposes of
+      reading and studying it;
+  (b) execute the Software against a non-production database for the sole
+      purpose of evaluating how it behaves;
+  (c) assess the Software as an example of the Owner's work, including in a
+      recruitment, hiring, or professional-engagement context; and
+  (d) quote short excerpts, with attribution, when discussing or reviewing the
+      Software.
+
+This Section grants no right to deploy the Software, to use it or any concept
+or technique embodied in it in a product, service, or internal system, to
+publish modified or derivative works, or to redistribute it. The Software is
+published so that it can be examined, not so that it can be deployed.
+
+Commercial licensing is available - see Section 3.
 
 ================================================================================
 3. REQUESTING PERMISSION
@@ -99,3 +123,12 @@ all use of the Software and destroy all copies in your possession or control.
 This license shall be governed by and construed in accordance with the laws of
 the jurisdiction in which the Owner resides, without regard to its conflict of
 laws principles.
+
+================================================================================
+9. NOT SECURITY-CERTIFIED
+================================================================================
+
+The Software implements a keyed Feistel construction. It has not been
+independently audited or certified. Read the round-count, domain-size, and
+key-management limitations documented in README.md before relying on it for
+anything that matters.
