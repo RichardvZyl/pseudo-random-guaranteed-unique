@@ -11,10 +11,18 @@ Ships in two faithful, behaviourally-equivalent ports:
 - **[`sqlserver/`](sqlserver/)** — Microsoft SQL Server (T-SQL), 2016/2019+.
 - **[`postgres/`](postgres/)** — PostgreSQL 13+ (`pgcrypto`).
 
-> **License / usage:** This is **proprietary software**. It is published for
-> reference only. You may **not** use, copy, modify, or deploy any part of it
-> without the prior written permission of the owner. See [LICENSE](LICENSE) and
-> [§ License & Permission](#license--permission) below.
+> **Status: reference implementation.** Published to be read, not deployed. It is
+> not independently audited, and it ships **6 Feistel rounds** - a deliberate
+> choice for a reference, and fewer than any standardised construction. Anyone
+> seeding a real pool should raise that to 8 or 10 first, because the round count
+> is fixed forever at first seed. The reasoning is in
+> [§ Security notes](#security-notes-round-count-domain-size-and-observable-patterns).
+
+> **License / usage:** **Proprietary.** You may clone, read, study and run it
+> against a non-production database to evaluate it, and assess it as an example of
+> the author's work. You may **not** deploy it, use it in any product or internal
+> system, publish derivative works, or redistribute it. See [LICENSE](LICENSE) and
+> [§ License & Permission](#license--permission).
 
 ---
 
@@ -209,6 +217,10 @@ no-`ON CONFLICT` batch insert) is discarded.
 
 ## Security notes: round count, domain size, and observable patterns
 
+**This implementation ships 6 rounds, and that is below standards-grade. It is a
+stated choice, not an oversight.** A reference implementation exists to be read;
+a deployed one should be seeded at 8 or 10. The rest of this section is why.
+
 The uniqueness and randomness guarantees above are only as strong as the Feistel
 construction's parameters. The observable-pattern risk in this design is **not**
 batch size — it is **round count versus domain size**.
@@ -216,7 +228,12 @@ batch size — it is **round count versus domain size**.
 A passive buyer collecting FIFO output effectively gets `(position, value)` pairs,
 and small-domain Feistel networks with few rounds have known distinguishing
 analyses — it is why FF1 uses 10 rounds, and FF3 used 8 and still got attacked
-and withdrawn. This design's **6 rounds** are margin over the Luby–Rackoff 3–4
+and withdrawn. Domain size is the part that works in this design's favour: 10-digit codes give a
+domain of 10^10, four orders of magnitude above the one-million minimum that
+NIST SP 800-38G Revision 1 sets for FF1 and FF3-1. The small-domain attacks that
+withdrew FF3 target far narrower formats than this one.
+
+Round count is where the margin is thin. This design's **6 rounds** are margin over the Luby–Rackoff 3–4
 round minimum, but below standards-grade.
 
 > **Recommendation — decide before the first seed.** Rounds cost only *seed time*
